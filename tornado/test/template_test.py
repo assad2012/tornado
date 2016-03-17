@@ -67,6 +67,7 @@ class TemplateTest(unittest.TestCase):
         self.assertRaises(ParseError, lambda: Template("{%"))
         self.assertEqual(Template("{{!").generate(), b"{{")
         self.assertEqual(Template("{%!").generate(), b"{%")
+        self.assertEqual(Template("{#!").generate(), b"{#")
         self.assertEqual(Template("{{ 'expr' }} {{!jquery expr}}").generate(),
                          b"expr {{jquery expr}}")
 
@@ -279,6 +280,11 @@ class ParseErrorDetailTest(unittest.TestCase):
                          str(cm.exception))
         self.assertEqual("foo.html", cm.exception.filename)
         self.assertEqual(3, cm.exception.lineno)
+
+    def test_custom_parse_error(self):
+        # Make sure that ParseErrors remain compatible with their
+        # pre-4.3 signature.
+        self.assertEqual("asdf at None:0", str(ParseError("asdf")))
 
 
 class AutoEscapeTest(unittest.TestCase):

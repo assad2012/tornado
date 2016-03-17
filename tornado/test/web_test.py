@@ -1476,6 +1476,8 @@ class RaiseWithReasonTest(SimpleHandlerTestCase):
     def test_httperror_str(self):
         self.assertEqual(str(HTTPError(682, reason="Foo")), "HTTP 682: Foo")
 
+    def test_httperror_str_from_httputil(self):
+        self.assertEqual(str(HTTPError(682)), "HTTP 682: Unknown")
 
 @wsgi_safe
 class ErrorHandlerXSRFTest(WebTestCase):
@@ -2763,3 +2765,8 @@ class ApplicationTest(AsyncTestCase):
         app = Application([])
         server = app.listen(0, address='127.0.0.1')
         server.stop()
+
+
+class URLSpecReverseTest(unittest.TestCase):
+    def test_reverse(self):
+        self.assertEqual('/favicon.ico', url(r'/favicon\.ico', None).reverse())
